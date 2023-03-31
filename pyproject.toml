@@ -2,7 +2,7 @@
 name = "facebook-scraper"
 version = "0.1"
 description = "Scrape Facebook"
-authors = [""]
+authors = ["Scrape Facebook <Scrokn@mail.ru>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Snipr10/facebook-scraper"
