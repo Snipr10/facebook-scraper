@@ -37,7 +37,7 @@ def iter_pages(account: str, request_fn: RequestFunction, **kwargs) -> Iterator[
 
 
 def iter_group_pages(
-    group: Union[str, int], request_fn: RequestFunction, **kwargs
+        group: Union[str, int], request_fn: RequestFunction, **kwargs
 ) -> Iterator[Page]:
     start_url = kwargs.pop("start_url", None)
 
@@ -69,7 +69,7 @@ def iter_photos(account: str, request_fn: RequestFunction, **kwargs) -> Iterator
 
 
 def generic_iter_pages(
-    start_url, page_parser_cls, request_fn: RequestFunction, **kwargs
+        start_url, page_parser_cls, request_fn: RequestFunction, **kwargs
 ) -> Iterator[Page]:
     next_url = start_url
 
@@ -273,16 +273,21 @@ class SearchPageParser(PageParser):
     cursor_regex = re.compile(r'href[:=]"[^"]+(/search/[^"]+)"')
     cursor_regex_2 = re.compile(r'href":"[^"]+(/search/[^"]+)"')
 
+    def get_page(self) -> Page:
+        return self._get_page('article[data-ft*="top_level_post_id"], div[data-ft*="top_level_post_id"]', 'article')
+
     def get_next_page(self) -> Optional[URL]:
         if self.cursor_blob is not None:
             match = self.cursor_regex.search(self.cursor_blob)
             if match:
                 return match.groups()[0]
-
             match = self.cursor_regex_2.search(self.cursor_blob)
             if match:
                 value = match.groups()[0]
                 return value.encode('utf-8').decode('unicode_escape').replace('\\/', '/')
+
+    def get_raw_page(self) -> RawPage:
+        return self.html
 
 
 class HashtagPageParser(PageParser):
